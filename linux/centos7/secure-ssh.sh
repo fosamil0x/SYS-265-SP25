@@ -10,7 +10,7 @@ cd /home/luc/SYS-265-SP25
 sudo cp SYS-265-SP25/linux/public-key/id_rsa.pub /home/${1}/.ssh/authorized_keys
 sudo chmod 700 /home/${1}/.ssh
 sudo chmod 600 /home/${1}/.ssh/authorized_keys
-
+sudo chown -R ${1}:${1} /home/${1}/.ssh
 
 
 # Disable root SSH login
