@@ -3,7 +3,7 @@
 # secure-ssh.sh
 # author: luc
 
-# Creates a new SSH user, generates an RSA key pair, and disables root SSH login.
+# Creates a new SSH user, uses public key, and disables root SSH login.
 sudo useradd -m -d /home/${1} -s /bin/bash ${1}
 sudo mkdir /home/${1}/.ssh
 cd /home/luc/SYS-265-SP25
