@@ -1,0 +1,8 @@
+---
+- hosts: docker
+  become: yes
+  vars:
+    docker_packages_state: absent
+    docker_remove_package_dependencies: true
+  roles:
+    - geerlingguy.docker

@@ -1,0 +1,9 @@
+[nginx]
+ansible1-luc
+[webmin]
+ansible2-luc
+[windows]
+mgmt01-luc
+wks01-luc
+[windows:vars]
+ansible_shell_type=powershell
