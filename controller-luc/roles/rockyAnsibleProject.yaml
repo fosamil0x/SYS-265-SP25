@@ -1,0 +1,16 @@
+---
+- name: Configure Rocky Linux hosts
+  hosts: rocky
+  become: yes
+  tasks:
+    # System Administration: Set timezone
+    - name: Set Rocky Linux timezone
+      community.general.timezone:
+        name: America/New_York
+
+    # System Hardening: Enable auditd service
+    - name: Enable auditd service
+      systemd:
+        name: auditd
+        state: started
+        enabled: yes
