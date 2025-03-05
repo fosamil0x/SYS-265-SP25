@@ -1,0 +1,31 @@
+---
+- name: Verify Windows configurations
+  hosts: windows
+  tasks:
+    - name: Check time zone
+      win_shell: Get-TimeZone | Select-Object -ExpandProperty Id
+      register: timezone_result
+
+    - name: Check script block logging
+      win_reg_stat:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging
+        name: EnableScriptBlockLogging
+      register: scriptblock_result
+
+    - name: Check minimum password length
+      win_reg_stat:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Network
+        name: MinPwdLen
+      register: minpwd_result
+
+    - name: Check guest account status
+      win_shell: Get-LocalUser -Name "Guest" | Select-Object -ExpandProperty Enabled
+      register: guest_result
+
+    - name: Display results
+      debug:
+        msg: 
+          - "Time Zone: {{ timezone_result.stdout }}"
+          - "Script Block Logging: {{ scriptblock_result.value }}"
+          - "Minimum Password Length: {{ minpwd_result.value }}"
+          - "Guest Account Disabled: {{ guest_result.stdout }}"
