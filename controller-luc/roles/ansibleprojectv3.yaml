@@ -1,0 +1,52 @@
+---
+- name: AI + DevOps Project
+  hosts: all
+  become: yes
+  tasks:
+    
+    # System Administration
+    # This section covers basic system configuration tasks.
+    - name: Configure Windows time synchronization
+      win_timezone:
+        timezone: "Eastern Standard Time"
+      when: inventory_hostname in groups['windows']
+
+    - name: Set Rocky Linux timezone
+      community.general.timezone:
+        name: America/New_York
+      when: inventory_hostname in groups['rocky']
+    
+    # System Hardening
+    # This section focuses on audit and logging hardening.
+    - name: Enable PowerShell script block logging
+      win_regedit:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging
+        name: EnableScriptBlockLogging
+        data: 1
+        type: dword
+      when: inventory_hostname in groups['windows']
+
+    - name: Enable auditd service
+      systemd:
+        name: auditd
+        state: started
+        enabled: yes
+      when: inventory_hostname in groups['rocky']
+
+    # AD DS GPO Hardening (without GPMC)
+    # This section covers Group Policy settings for user and computer hardening.
+    - name: Set minimum password length
+      win_regedit:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Network
+        name: MinPwdLen
+        data: 14
+        type: dword
+      when: inventory_hostname in groups['windows']
+    
+    - name: Disable guest account
+      win_regedit:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+        name: EnableGuestAccount
+        data: 0
+        type: dword
+      when: inventory_hostname in groups['windows']
