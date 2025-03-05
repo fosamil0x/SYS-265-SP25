@@ -1,0 +1,50 @@
+---
+- name: AI + DevOps Project for Linux Hosts
+  hosts: rocky
+  become: yes
+  tasks:
+    # System Administration: Set timezone
+    - name: Set Rocky Linux timezone
+      community.general.timezone:
+        name: America/New_York
+
+    # System Hardening: Enable auditd service
+    - name: Enable auditd service
+      systemd:
+        name: auditd
+        state: started
+        enabled: yes
+
+- name: AI + DevOps Project for Windows Hosts
+  hosts: windows
+  become: yes
+  become_method: runas
+  tasks:
+    # System Administration: Configure Windows time synchronization
+    - name: Configure Windows time synchronization
+      win_timezone:
+        timezone: "Eastern Standard Time"
+    
+    # System Hardening: Enable PowerShell script block logging
+    - name: Enable PowerShell script block logging
+      win_regedit:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging
+        name: EnableScriptBlockLogging
+        data: 1
+        type: dword
+
+    # AD DS GPO Hardening (Local Registry): Set minimum password length
+    - name: Set minimum password length
+      win_regedit:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Network
+        name: MinPwdLen
+        data: 14
+        type: dword
+    
+    # AD DS GPO Hardening (Local Registry): Disable guest account
+    - name: Disable guest account
+      win_regedit:
+        path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+        name: EnableGuestAccount
+        data: 0
+        type: dword
